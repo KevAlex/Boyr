@@ -1,5 +1,6 @@
 public class Boyer {
 
+    
     /**
      * @param args the command line arguments
      */
@@ -13,8 +14,7 @@ public class Boyer {
         texto = tex.toCharArray();
         // bad match table
         int corro[] = new int[patron.length];
-        char sub[] = new char[patron.length];
-        boolean d = false;
+        int h = 0;
         for (int m = 0; m < patron.length; m++) {
             for (int j = 0; j < patron.length; j++) {
                 corro[m] = patron.length - m - 1;
@@ -22,28 +22,30 @@ public class Boyer {
         }
         corro[patron.length - 1] = patron.length;
 //                
-        int h = 0;
-        for (int i = (patron.length - 1); i < texto.length; i++) {          // aca empieza comprobando la ultima posicion del patron en el texto
+        for (int i = (0); i < texto.length; i++) {          // aca empieza comprobando la ultima posicion del patron en el texto
 //            System.out.println("primera " + i);
+              
             for (int j = a.length() - 1; j >= 0; j--) {
 //                System.out.println("2da " + j);
-                if (texto[i] == patron[j]) {                        //si coincide la palabra                       
-                    System.out.println(" //coincide tex " + patron[j] + " valor de i " + i);
+                if ((i + patron.length) < texto.length && texto[(i + (patron.length-1))] == patron[j]) {                        //si coincide la palabra                       
+                    System.out.println(" //coincide tex " + texto[(i + (patron.length-1))] + " con pat " + patron[j] + " *** valor de i " + i);
                     //coincidencias de letras  
                     i = i - 1;
                 } else {
-                    System.out.println("No coincide tex " + texto[i] + " patron " + patron[j] + " i " + i);
-                    j = -1;
-                    for (int w = 0; w < patron.length; w++) {
-                        if (texto[i] == patron[w] && h==0) {                // evalua si la letra que no esta en el texto esta en el patron
+                    if ((i + patron.length) < texto.length ) {
+                        System.out.println("No coincide tex " + texto[i + (patron.length-1) ] + " patron " + patron[j] + " valor i " + i);
+                        j = -1;
+                        for (int w = 0; w < patron.length; w++) {
+                            if (texto[i] == patron[w] && h == 0) {                // evalua si la letra que no esta en el texto esta en el patron
 //                            System.out.println(" val1 "+ i);
-                            i = corro[w]+i; //                          hace el corrimiento si encuentra que la letra que no coincidio esta en el patron
-                            h = 1;
-                            w = patron.length + 1;          // si no coincide la palabra evito que se haga todo el for y lo saco de una
-                        } else {
-                            if ((w + 1 == patron.length) && (h == 0)) {
-                                i = i + corro[patron.length - 1] -1; //          si no esta la letra hace el corrimiento con longitud = a la longitud del patron
-                                    
+                                i = corro[w] + i; //                          hace el corrimiento si encuentra que la letra que no coincidio esta en el patron
+                                h = 1;
+                                w = patron.length + 1;          // si no coincide la palabra evito que se haga todo el for y lo saco de una
+                            } else {
+                                if ((w + 1 == patron.length) && (h == 0)) {
+                                    i = i + corro[patron.length - 1] - 1; //          si no esta la letra hace el corrimiento con longitud = a la longitud del patron
+
+                                }
                             }
                         }
                     }
@@ -51,7 +53,7 @@ public class Boyer {
                 }
 
             }
-
+            
         }
 //        for (int p = 0; p < patron.length; p++) {
 ////
