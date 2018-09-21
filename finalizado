@@ -1,14 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package javaapplication10;
-
-/**
- *
- * @author kevin
- */
 import java.util.*;
 
 public class Atras {
@@ -16,7 +5,7 @@ public class Atras {
     public static void main(String args[]) {
 
         Atras bm = new Atras();
-        String texto = "pcaros de caros vala \n caros ";
+        String texto = "pcaros de lateleletal caros vala caros amo ";
         String comando = "caros";
 
         char patron[] = new char[texto.length()];
@@ -43,58 +32,73 @@ public class Atras {
 
         }
         System.out.println("");
+        String e = "";
+        String[] m = texto.split(" ");
+        System.out.println("Palabras palindromas en el texto");
+        int no=0;
+        for (int p = 0; p < m.length; p++) {
+            
+            for (int a = m[p].length() - 1; a >= 0; a--) {
+                e = e + m[p].charAt(a);
+            }
+            if (e.equals(m[p])) {
+                 System.out.print((char) 27 + "[30;31m" +" " +e);
+//                System.out.print(" "+e);
+                p++;
+                no++;
+            }
+            e = "";
+            if(p<m.length){
+                System.out.print((char) 27 + "[30;30m" + " " +m[p]);
+            }
+        }
+        System.out.println("");
+        System.out.println((char) 27 + "[30;30m" + "Numero de palindromos " + no);
+
     }
     public static final int abcd = 256;
     private int[] bmBC;
     private int[] bmGs;
     public int comparisons;
 
-    public void preBmBc(char[] x) {
+    public void corrimiento(char[] x) {
         int m = x.length;
         bmBC = new int[abcd];
         Arrays.fill(bmBC, m);
         for (int i = 0; i < m - 1; i++) {
-            bmBC[x[i]] = m - i - 1;
+            bmBC[x[i]] = m - i - 1;     
         }
     }
 
-    public int[] suffixes(char[] x) {
+    public int[] sufijo(char[] x) {
         int m = x.length;
         int suff[] = new int[m];
         int g = m - 1;
         int f = m - 1;
-
         suff[m - 1] = m;
-
         for (int i = m - 2; i >= 0; --i) {
             if (i > g && (i + m - 1 - f) < m && suff[i + m - 1 - f] < i - g) {
                 suff[i] = suff[i + m - 1 - f];
             } else {
-                //if (i < g) {
                 g = i;
-                //}
                 f = g;
-
-                while (g >= 0 && x[g] == x[g + m - 1 - f]) {
+                while (g >= 0 && x[g] == x[g+m - 1 -f]) {
                     --g;
                 }
-
                 suff[i] = f - g;
-
             }
         }
-
         return suff;
     }
 
     public void preBmGs(char[] x) {
         int m = x.length;
         bmGs = new int[m];
-        int suff[] = suffixes(x);
+        int suf[] = sufijo(x);
         Arrays.fill(bmGs, m);
         int j = 0;
         for (int i = m - 1; i >= -1; --i) {
-            if (i == -1 || suff[i] == i + 1) {
+            if (i == -1 || suf[i] == i + 1) {
                 for (; j < m - 1 - i; ++j) {
                     if (bmGs[j] == m) {
                         bmGs[j] = m - 1 - i;
@@ -103,14 +107,14 @@ public class Atras {
             }
         }
         for (int i = 0; i < m - 1; i++) {
-            bmGs[m - 1 - suff[i]] = m - 1 - i;
+            bmGs[m - 1 - suf[i]] = m - 1 - i;
 
         }
     }
 
-    public List<Integer> busqueda(String text, String pattern) {
-        char[] y = text.toCharArray();
-        char[] x = pattern.toCharArray();
+    public List<Integer> busqueda(String texto, String pat) {
+        char[] y = texto.toCharArray();
+        char[] x = pat.toCharArray();
         int n = y.length; // string length
         int m = x.length; // pattern length
 
@@ -121,17 +125,17 @@ public class Atras {
         comparisons = 0;
 
         /* Precompute */
-        preBmBc(x);
+        corrimiento(x);
         preBmGs(x);
 
         /* Searching */
         while (j <= n - m) {
             for (i = m - 1; i >= 0 && x[i] == y[i + j]; i--) {
-                comparisons++;
+               
             }
             if (i < 0) {
                 resultado.add(j);
-                
+
                 j += bmGs[0];
             } else {
                 j += Math.max(bmGs[i], bmBC[y[i + j]] - m + 1 + i);
@@ -142,3 +146,4 @@ public class Atras {
 
     }
 }
+
